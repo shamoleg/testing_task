@@ -2,6 +2,8 @@
 // Created by sham on 2/11/24.
 //
 #include <vector>
+#include <limits>
+#include <cmath>
 
 #ifndef TESTING_TASK_PATHFINDER_H
 #define TESTING_TASK_PATHFINDER_H
@@ -25,6 +27,8 @@ struct WayPoint2D{
     };
     Position2D pos2D;
     float penaltySkipping;
+
+    static float calcDistance(const WayPoint2D& p1, const WayPoint2D& p2);
 };
 
 struct PathFinderParams{
@@ -36,13 +40,15 @@ using GraphTable = std::vector<std::vector<std::pair<int, float>>>;
 
 class PathFinder : public IPathFinder<WayPoint2D> {
 public:
-    PathFinder(PathFinderParams params);
+    explicit PathFinder(PathFinderParams params);
     void setNodes(const std::vector<WayPoint2D> &route) final;
     float getShortestTime() final {return {};};
     std::vector<WayPoint2D> getPathWithShortestTime() final{return {};};
 
 private:
-
+    PathFinderParams params;
+    float shortestTime;
+    std::vector<WayPoint2D> shortestPath;
     GraphTable transitionsTable;
 };
 
