@@ -12,7 +12,7 @@ int main(){
             float robotVelocity = 2;
             float loadingTime = 10;
             pf::PathFinderParams params{robotVelocity,loadingTime};
-            pf::PathFinderWayPoint2D pathFinder(params);
+            pf::PathFinder pathFinder(params);
 
             pathFinder.setNodes(creatorPathFinder.value());
 
