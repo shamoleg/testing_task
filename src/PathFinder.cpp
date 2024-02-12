@@ -5,7 +5,7 @@
 
 namespace pf{
 
-void PathFinder::setNodes(const RouteWayPoint &route){
+void PathFinder::calculatePath(const RouteWayPoint &route){
     std::vector<float> timeToPoint(route.size(), std::numeric_limits<float>::max());
     std::vector<int> previous(route.size(), -1);
 
@@ -62,10 +62,64 @@ std::optional<RouteWayPoint> createPathFinderWayPoint2D(std::istream &stream){
 PathFinder::PathFinder(PathFinderParams params):
         params(params),
         shortestTime(std::numeric_limits<float>::max())
-{};
+{}
 
 float calcDistance(const WayPoint& p1, const WayPoint& p2){
     return sqrt((std::pow(p1.pos.x - p2.pos.x, 2) + std::pow(p1.pos.y - p2.pos.y, 2)));
 }
+
+PathFinderDijkstra::PathFinderDijkstra(PathFinderParams params):
+        params(params),
+        shortestTime(std::numeric_limits<float>::max())
+{}
+
+void PathFinderDijkstra::calculatePath(const RouteWayPoint &route){
+    std::vector<float> timeToPoint(route.size(), std::numeric_limits<float>::max());
+    std::vector<int> previous(route.size(), -1);
+
+    std::vector<bool> processed(route.size(), false);
+
+    timeToPoint[0] = 0;
+    std::queue<std::pair<float, int>> pointToCalc;
+    pointToCalc.emplace(0,0);
+    while (!pointToCalc.empty()) {
+        int currPoint = pointToCalc.front().second;
+        pointToCalc.pop();
+        if (processed[currPoint]) {
+            continue;
+        }
+        processed[currPoint] = true;
+        float penaltySum = 0;
+        for (int nextPoint = currPoint+1; nextPoint < route.size(); nextPoint++) {
+            float cost = calcDistance(route[currPoint], route[nextPoint])
+                    / params.robotVelocity + params.loadingTime + penaltySum;
+            if (timeToPoint[currPoint]+cost < timeToPoint[nextPoint]) {
+                timeToPoint[nextPoint] = timeToPoint[currPoint] + cost;
+                previous[nextPoint] = currPoint;
+                pointToCalc.emplace(timeToPoint[nextPoint],nextPoint);
+            }
+            penaltySum += (route[nextPoint].penaltySkipping);
+        }
+    }
+
+    shortestTime = timeToPoint.back();
+    int prevIndex = previous.back();
+    shortestPath.clear();
+    shortestPath.push_back(route.back());
+    while (prevIndex != -1){
+        shortestPath.push_back(route[prevIndex]);
+        prevIndex = previous[prevIndex];
+    }
+    std::reverse(shortestPath.begin(), shortestPath.end());
+}
+
+float PathFinderDijkstra::getShortestTime() const  {
+    return shortestTime;
+}
+
+RouteWayPoint PathFinderDijkstra::getPathWithShortestTime() const{
+    return shortestPath;
+}
+
 
 }

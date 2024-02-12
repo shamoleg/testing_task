@@ -10,6 +10,7 @@
 #include <optional>
 #include <iostream>
 #include <algorithm>
+#include <queue>
 
 namespace pf {
 
@@ -34,12 +35,21 @@ struct PathFinderParams{
 
 using RouteWayPoint = std::vector<WayPoint>;
 
-class PathFinder {
+class IPathFinder {
+public:
+    virtual ~IPathFinder() = default;
+
+    virtual void calculatePath(const RouteWayPoint &route) = 0;
+    virtual float getShortestTime() const = 0;
+    virtual RouteWayPoint getPathWithShortestTime() const = 0;
+};
+
+class PathFinder : IPathFinder {
 public:
     explicit PathFinder(PathFinderParams params);
-    void setNodes(const RouteWayPoint &route);
-    float getShortestTime() const;
-    RouteWayPoint getPathWithShortestTime() const;
+    void calculatePath(const RouteWayPoint &route) final;
+    float getShortestTime() const final;
+    RouteWayPoint getPathWithShortestTime() const final;
 
 private:
 
@@ -47,6 +57,21 @@ private:
     float shortestTime;
     RouteWayPoint shortestPath;
 };
+
+class PathFinderDijkstra : IPathFinder {
+public:
+    explicit PathFinderDijkstra(PathFinderParams params);
+    void calculatePath(const RouteWayPoint &route) final;
+    float getShortestTime() const final;
+    RouteWayPoint getPathWithShortestTime() const final;
+
+private:
+
+    PathFinderParams params;
+    float shortestTime;
+    RouteWayPoint shortestPath;
+};
+
 
 std::optional<RouteWayPoint> createPathFinderWayPoint2D(std::istream &stream);
 

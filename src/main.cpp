@@ -12,9 +12,9 @@ int main(){
             float robotVelocity = 2;
             float loadingTime = 10;
             pf::PathFinderParams params{robotVelocity,loadingTime};
-            pf::PathFinder pathFinder(params);
+            pf::PathFinderDijkstra pathFinder(params);
 
-            pathFinder.setNodes(creatorPathFinder.value());
+            pathFinder.calculatePath(creatorPathFinder.value());
 
             std::cout << std::roundf(pathFinder.getShortestTime() * 1000)/1000 << std::endl;
         } else{
