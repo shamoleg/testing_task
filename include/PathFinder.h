@@ -58,6 +58,7 @@ private:
     RouteWayPoint shortestPath;
 };
 
+//Дополнительный пример реализации
 class PathFinderDijkstra : IPathFinder {
 public:
     explicit PathFinderDijkstra(PathFinderParams params);
@@ -73,7 +74,7 @@ private:
 };
 
 
-std::optional<RouteWayPoint> createPathFinderWayPoint2D(std::istream &stream);
+std::optional<RouteWayPoint> createRouteWayPoint(std::istream &stream);
 
 }
 

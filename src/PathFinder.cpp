@@ -24,6 +24,7 @@ void PathFinder::calculatePath(const RouteWayPoint &route){
     }
     shortestTime = timeToPoint.back();
 
+    // Формирование кратчайшего пути
     int prevIndex = previous.back();
     shortestPath.clear();
     shortestPath.push_back(route.back());
@@ -42,7 +43,7 @@ RouteWayPoint PathFinder::getPathWithShortestTime() const{
     return shortestPath;
 }
 
-std::optional<RouteWayPoint> createPathFinderWayPoint2D(std::istream &stream){
+std::optional<RouteWayPoint> createRouteWayPoint(std::istream &stream){
     int numberOfPointInIO = 0;
     stream >> numberOfPointInIO;
     if (numberOfPointInIO == 0){
@@ -68,6 +69,8 @@ float calcDistance(const WayPoint& p1, const WayPoint& p2){
     return sqrt((std::pow(p1.pos.x - p2.pos.x, 2) + std::pow(p1.pos.y - p2.pos.y, 2)));
 }
 
+
+//Дополнительный пример реализации
 PathFinderDijkstra::PathFinderDijkstra(PathFinderParams params):
         params(params),
         shortestTime(std::numeric_limits<float>::max())
