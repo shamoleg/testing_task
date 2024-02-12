@@ -6,6 +6,7 @@
 Для сборки выполнить команды:
 ```
 git clone https://github.com/shamoleg/testing_task
+cd testing_task
 mkdir build && cd build
 cmake ..
 make
