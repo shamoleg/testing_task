@@ -7,4 +7,5 @@ include_directories(include)
 add_executable(testing_task
         src/main.cpp
         src/PathFinder.cpp
+        src/Algorithm.cpp
 )
